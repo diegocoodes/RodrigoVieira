@@ -24,13 +24,15 @@ Se o domínio definitivo já estiver definido, copie `.env.example` para `.env.l
 
 | Campo | Valor |
 | --- | --- |
-| Framework Preset | Next.js |
+| Framework Preset | Other (exportação estática) |
 | Node.js | 24.x |
 | Install Command | `npm ci` |
 | Build Command | `npm run build` |
 | Output Directory | `out` |
 
 Não selecione `out` como Root Directory: ela é a saída gerada durante o build.
+
+O preset **Other** é intencional e está definido por `"framework": null` em `vercel.json`. O código continua usando Next.js para gerar o site, mas a Vercel publica os arquivos estáticos de `out/`. Combinar o preset Next.js com essa saída pode provocar `NEXT_NO_ROUTES_MANIFEST`, pois o adaptador passa a procurar o manifesto interno dentro de `out/`. A configuração versionada tem prioridade sobre o preset do painel; ao configurar manualmente, use Other.
 
 ## Hostinger: ZIP para hospedagem PHP/HTML
 

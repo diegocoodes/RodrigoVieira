@@ -30,7 +30,7 @@ O repositório está preparado para Vercel e Hostinger. O passo a passo está em
 
 | Destino | Como publicar |
 | --- | --- |
-| Vercel | Importar este repositório com Root Directory `.`; `vercel.json` configura o build e a saída `out` |
+| Vercel | Importar com Root Directory `.` e preset Other; `vercel.json` configura o build estático e a saída `out` |
 | Hostinger PHP/HTML | Executar `npm run build:hostinger` e extrair `dist/hostinger/rodrigo-vieira-hostinger.zip` em `public_html` |
 | GitHub Actions | Cada push em `main` valida o build e disponibiliza o pacote Hostinger como artefato |
 
