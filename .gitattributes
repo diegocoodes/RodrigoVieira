@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.mjs text eol=lf
+*.woff2 binary
+*.webp binary
+*.jpg binary
+*.jpeg binary

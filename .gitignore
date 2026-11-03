@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+.openai/
+test-results/
+artifacts/
+*.tsbuildinfo
+.env*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db

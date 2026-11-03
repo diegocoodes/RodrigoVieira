@@ -1,0 +1,10 @@
+# Static Next.js export, deployed at the domain root.
+DirectoryIndex index.html
+Options -Indexes
+ErrorDocument 404 /404.html
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:html|txt|xml)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>

@@ -1,0 +1,277 @@
+/* Motion direction: slow ambient light, brief entrances and clear interaction. */
+:root {
+  --ease-out-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.site-atmosphere {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  z-index: 0;
+}
+.ambient-wash {
+  position: absolute;
+  display: block;
+  width: min(1100px, 100vw);
+  height: 1000px;
+  background: radial-gradient(
+    ellipse,
+    #ac7a2829 0%,
+    #8c60200c 38%,
+    transparent 68%
+  );
+}
+.ambient-wash-left {
+  left: -45%;
+  top: 23%;
+  animation: ambient-drift-left 24s ease-in-out infinite alternate;
+}
+.ambient-wash-right {
+  right: -42%;
+  bottom: 2%;
+  animation: ambient-drift-right 29s ease-in-out infinite alternate;
+}
+.hero-light {
+  animation: hero-light-drift 14s ease-in-out infinite alternate;
+}
+.hero-copy > .course-wordmark {
+  animation: editorial-rise 0.7s var(--ease-out-editorial) both;
+}
+.hero h1 > span {
+  animation: editorial-rise 0.75s var(--ease-out-editorial) backwards;
+}
+.hero h1 > span:nth-child(1) {
+  animation-delay: 0.08s;
+}
+.hero h1 > span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.hero h1 > span:nth-child(3) {
+  animation-delay: 0.22s;
+}
+.hero h1 > span:nth-child(4) {
+  animation-delay: 0.29s;
+}
+.hero-description {
+  animation: editorial-rise 0.7s var(--ease-out-editorial) 0.28s backwards;
+}
+.hero-context {
+  animation: editorial-rise 0.7s var(--ease-out-editorial) 0.34s backwards;
+}
+.hero-actions,
+.hero-note {
+  animation: editorial-rise 0.7s var(--ease-out-editorial) 0.4s backwards;
+}
+.hero-photo-wrap {
+  animation: portrait-arrive 0.95s var(--ease-out-editorial) backwards;
+}
+.ticker-inner {
+  animation: ticker-travel 48s linear infinite;
+}
+.info-ticker:hover .ticker-inner,
+.info-ticker:focus-within .ticker-inner {
+  animation-play-state: paused;
+}
+.button-gold {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.button-gold::after {
+  content: "";
+  position: absolute;
+  inset: -30% auto -30% -45%;
+  width: 35%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #fff5, transparent);
+  transform: translateX(-150%) skewX(-20deg);
+}
+.button .icon,
+.text-link .icon {
+  transition: transform 0.35s var(--ease-out-editorial);
+}
+.button:hover .icon,
+.text-link:hover .icon {
+  transform: translate(3px, -3px);
+}
+.button-gold:hover::after,
+.button-gold:focus-visible::after {
+  animation: button-sheen 0.8s var(--ease-out-editorial);
+}
+.audience-card {
+  transition:
+    border-color 0.3s,
+    transform 0.45s var(--ease-out-editorial),
+    opacity 0.65s var(--ease-out-editorial);
+}
+.audience-layout::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at 0 100%, #c6a15b14, transparent 68%);
+  animation: panel-illumination 12s ease-in-out infinite alternate;
+}
+.reveal {
+  transition:
+    opacity 0.8s var(--ease-out-editorial),
+    transform 0.8s var(--ease-out-editorial);
+}
+.reveal-pending.reveal-from-left {
+  transform: translateX(-22px);
+}
+.reveal-pending.reveal-from-right {
+  transform: translateX(22px);
+}
+.reveal-group > :nth-child(2) {
+  transition-delay: 0.07s;
+}
+.reveal-group > :nth-child(3) {
+  transition-delay: 0.14s;
+}
+.reveal-group > :nth-child(4) {
+  transition-delay: 0.21s;
+}
+@media (hover: hover) {
+  .audience-card:not(.reveal-pending):hover {
+    transform: translateY(-4px);
+  }
+  .offer-row {
+    transition:
+      background 0.25s,
+      border-color 0.25s,
+      transform 0.35s var(--ease-out-editorial);
+  }
+  .offer-row:hover {
+    transform: translateX(3px);
+  }
+}
+@supports (interpolate-size: allow-keywords) and
+  selector(details::details-content) {
+  .faq-item {
+    interpolate-size: allow-keywords;
+  }
+  .faq-item::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition:
+      block-size 0.32s var(--ease-out-editorial),
+      opacity 0.25s,
+      content-visibility 0.32s allow-discrete;
+  }
+  .faq-item[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+  .faq-answer {
+    animation: none;
+  }
+}
+@keyframes editorial-rise {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes portrait-arrive {
+  from {
+    opacity: 0;
+    transform: translateX(25px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes hero-light-drift {
+  from {
+    transform: translate3d(-18px, 8px, 0);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate3d(22px, -12px, 0);
+    opacity: 0.95;
+  }
+}
+@keyframes ambient-drift-left {
+  from {
+    transform: translate3d(0, -40px, 0);
+    opacity: 0.5;
+  }
+  to {
+    transform: translate3d(140px, 70px, 0);
+    opacity: 1;
+  }
+}
+@keyframes ambient-drift-right {
+  from {
+    transform: translate3d(40px, 50px, 0);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate3d(-100px, -55px, 0);
+    opacity: 0.9;
+  }
+}
+@keyframes ticker-travel {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes button-sheen {
+  to {
+    transform: translateX(570%) skewX(-20deg);
+  }
+}
+@keyframes panel-illumination {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 600px) {
+  .menu-toggle {
+    margin-left: auto;
+  }
+  .ambient-wash {
+    width: 700px;
+    height: 850px;
+  }
+  .ambient-wash-left {
+    left: -130%;
+  }
+  .ambient-wash-right {
+    right: -135%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .faq-item::details-content {
+    transition-duration: 0.01ms !important;
+  }
+  .reveal-pending {
+    opacity: 1;
+    transform: none;
+  }
+  .button:hover .icon,
+  .text-link:hover .icon,
+  .offer-row:hover {
+    transform: none;
+  }
+}
