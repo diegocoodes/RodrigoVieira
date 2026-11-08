@@ -2,7 +2,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Enhancements } from "@/components/layout/Enhancements";
 import { SiteAtmosphere } from "@/components/layout/SiteAtmosphere";
-import { SiteIntro } from "@/components/layout/SiteIntro";
+import { SiteEntry } from "@/components/layout/SiteEntry";
 import { Hero, InfoTicker } from "@/components/sections/Hero";
 import { ProgramContent } from "@/components/sections/ProgramContent";
 import {
@@ -19,7 +19,7 @@ import {
 export default function Home() {
   return (
     <>
-      <SiteIntro />
+      <SiteEntry />
       <Header />
       <main id="conteudo">
         <SiteAtmosphere />

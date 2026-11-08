@@ -1,5 +1,7 @@
 import { createServer } from "node:http";
-import { readFile, stat } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { pipeline } from "node:stream/promises";
 import { resolve, extname, sep } from "node:path";
 
 const root = resolve("out");
@@ -13,6 +15,8 @@ const types = {
   ".webp": "image/webp",
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".mp4": "video/mp4",
   ".woff2": "font/woff2",
   ".ttf": "font/ttf",
   ".xml": "application/xml",
@@ -33,13 +37,37 @@ const server = createServer(async (request, response) => {
     } catch {
       if (!extname(file)) file += ".html";
     }
-    const data = await readFile(file);
-    response.writeHead(200, {
+    const { size } = await stat(file);
+    const headers = {
       "Content-Type": types[extname(file)] || "application/octet-stream",
-    });
-    response.end(data);
+      "Accept-Ranges": "bytes",
+    };
+    let start = 0;
+    let end = size - 1;
+    const range = request.headers.range;
+    if (range) {
+      const match = /^bytes=(\d*)-(\d*)$/.exec(range);
+      if (!match || (!match[1] && !match[2])) {
+        response.writeHead(416, { "Content-Range": `bytes */${size}` }).end();
+        return;
+      }
+      start = match[1] ? Number(match[1]) : Math.max(0, size - Number(match[2]));
+      end = match[1] && match[2] ? Math.min(Number(match[2]), size - 1) : size - 1;
+      if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start > end || start < 0 || start >= size) {
+        response.writeHead(416, { "Content-Range": `bytes */${size}` }).end();
+        return;
+      }
+      headers["Content-Range"] = `bytes ${start}-${end}/${size}`;
+    }
+    headers["Content-Length"] = range ? end - start + 1 : size;
+    response.writeHead(range ? 206 : 200, headers);
+    if (request.method === "HEAD" || size === 0) {
+      response.end();
+      return;
+    }
+    await pipeline(createReadStream(file, { start, end }), response);
   } catch {
-    response.writeHead(404).end("Not found");
+    if (!response.headersSent) response.writeHead(404).end("Not found");
   }
 });
 server.listen(port, "127.0.0.1", () =>

@@ -7,6 +7,7 @@ const browser = await chromium.launch({ channel: process.env.QA_BROWSER || 'msed
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
+  page.setDefaultTimeout(15000);
   await page.addInitScript(() => {
     window.qaCLS = 0;
     window.qaLCP = 0;
@@ -17,8 +18,16 @@ try {
       window.qaLCP = list.getEntries().at(-1).startTime;
     }).observe({ type: 'largest-contentful-paint', buffered: true });
   });
-  await page.goto(process.env.QA_URL || 'http://127.0.0.1:3000', { waitUntil: 'networkidle' });
+  await page.goto(process.env.QA_URL || 'http://127.0.0.1:3000', { waitUntil: 'domcontentloaded' });
   await page.locator('.site-intro').waitFor({ state: 'hidden' });
+  const welcome = page.locator('.welcome-video-modal');
+  await welcome.waitFor({ state: 'visible' });
+  await page.screenshot({ path: 'artifacts/welcome-video-desktop.png' });
+  await welcome.getByRole('button', { name: 'Reproduzir vídeo com som' }).click();
+  await page.waitForFunction(() => document.querySelector('.welcome-video-modal video')?.currentTime > 0);
+  assert.equal(await welcome.locator('video').evaluate(el => !el.muted && el.volume === 1), true);
+  await welcome.getByRole('button', { name: 'Fechar vídeo' }).click();
+  await welcome.waitFor({ state: 'detached' });
   await page.evaluate(() => document.fonts.ready);
   await page.waitForFunction(() => document.getAnimations().filter(animation => Number.isFinite(animation.effect?.getComputedTiming().endTime)).every(animation => animation.playState === 'finished'));
   const initialLCP = await page.evaluate(() => window.qaLCP);
@@ -32,6 +41,9 @@ try {
   await page.waitForFunction(() => document.querySelector('.mentor-image img').complete);
   await page.locator('.mentor-layout').screenshot({ path: 'artifacts/mentor-desktop.png' });
   await page.locator('.program-card-section').screenshot({ path: 'artifacts/program-desktop.png' });
+  await page.locator('#mentoria').screenshot({ path: 'artifacts/audience-video-desktop.png' });
+  await page.locator('#feedbacks').screenshot({ path: 'artifacts/feedback-desktop.png' });
+  await page.locator('#proposta').screenshot({ path: 'artifacts/proposal-desktop.png' });
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   await page.screenshot({ path: 'artifacts/desktop.png', fullPage: true });
   const metrics = await page.evaluate(() => ({

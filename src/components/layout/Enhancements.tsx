@@ -6,7 +6,7 @@ export function Enhancements() {
   useEffect(() => {
     if (!("IntersectionObserver" in window)) return;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const intro = document.querySelector<HTMLDialogElement>(".site-intro");
+    const entry = document.querySelector<HTMLElement>("[data-site-entry]");
     let observer: IntersectionObserver | undefined;
 
     function reset() {
@@ -21,7 +21,11 @@ export function Enhancements() {
     }
 
     function start() {
-      if (preference.matches || intro?.open || observer) return;
+      if (
+        preference.matches ||
+        (entry && entry.dataset.entryStage !== "done") ||
+        observer
+      ) return;
       observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -54,13 +58,19 @@ export function Enhancements() {
       start();
     }
 
-    // Start the hero's word animation after the opening, so it is actually seen.
+    // Reveal the hero after both the name animation and the video have closed.
     const frame = requestAnimationFrame(start);
-    intro?.addEventListener("close", start);
+    const entryObserver = new MutationObserver(start);
+    if (entry) {
+      entryObserver.observe(entry, {
+        attributes: true,
+        attributeFilter: ["data-entry-stage"],
+      });
+    }
     preference.addEventListener("change", preferenceChanged);
     return () => {
       cancelAnimationFrame(frame);
-      intro?.removeEventListener("close", start);
+      entryObserver.disconnect();
       preference.removeEventListener("change", preferenceChanged);
       reset();
     };

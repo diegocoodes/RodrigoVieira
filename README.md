@@ -2,7 +2,7 @@
 
 Landing page completa para **Do Zero a 50 Administrações**, com identidade em preto e dourado, fotos oficiais do mentor e conversão pelo WhatsApp.
 
-A composição segue a referência mais recente: abertura centralizada com retrato acima do texto, apresentação do mentor em duas colunas, faixa horizontal e quatro cards de identificação lado a lado no desktop. As seções formam um fluxo contínuo, sem linhas verticais, molduras de página ou divisórias entre blocos. O acompanhamento de seis meses e a imersão de três dias aparecem em dois cards na mesma seção, com links próprios preservados. O programa mantém seis cards numerados e os nove assuntos originais, com detalhes por clique ou teclado. O próximo passo profissional usa três colunas e o FAQ tem respostas expansíveis em cards individuais. As grades se adaptam ao celular.
+A abertura mantém o retrato de Rodrigo acima do texto, como no hero original. Após a animação de entrada, o vídeo de Rodrigo em Portugal aparece em um modal com borda dourada animada, sem controles de vídeo, com X para fechar e o botão “Entrar na mentoria” abaixo. O segundo vídeo permanece logo abaixo de “Essa mentoria foi feita para você que”. A seção “Antes de crescer, estruture.” apresenta o título à esquerda e os dois parágrafos à direita, em um painel separado; no celular, os blocos ficam empilhados. A apresentação do mentor, o programa, o acompanhamento, a imersão e os feedbacks preservam seus conteúdos.
 
 ## Executar
 
@@ -41,31 +41,35 @@ Antes da publicação definitiva, copie `.env.example` para `.env.local`, preenc
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `src/content/copy.ts` | Títulos, textos editoriais, legendas e CTAs |
-| `src/content/mentorship.ts` | Programa, públicos, eixos, FAQ e depoimentos aprovados |
+| `src/content/mentorship.ts` | Programa, públicos, eixos, FAQ e exemplos fictícios de feedback |
 | `src/content/photos.ts` | Fotos selecionadas, dimensões e descrições acessíveis |
-| `src/config/site.ts` | WhatsApp, mensagens, navegação e metadados |
+| `src/content/videos.ts` | Arquivos dos vídeos, capas e legendas descritivas |
+| `src/config/site.ts` | Grupo do WhatsApp, navegação e metadados |
 | `src/styles/globals.css` | Tokens, composição, responsividade e movimento reduzido |
 | `src/styles/motion.css` | Fundos animados, entradas, faixa contínua, interações e movimento reduzido |
 | `src/styles/entry-and-program.css` | Abertura com vaporização e grade dos seis cards do programa |
 | `src/styles/flow-layout.css` | Composição contínua, hero centralizado e seções adaptadas à última referência |
 | `src/styles/vivid-motion.css` | Base preta, luzes e partículas douradas, faixa para a direita e animações dos títulos |
+| `src/styles/media-and-feedback.css` | Modal de vídeo, proposta em duas colunas, borda animada e cards de feedback |
 | `src/components/sections/` | Seções da landing page |
 | `src/components/layout/` | Cabeçalho, rodapé e revelações durante a rolagem |
 | `src/components/ui/` | Botões, títulos, ícones e ano dinâmico |
 | `DEPLOY.md`, `vercel.json`, `deploy/` | Instruções e configurações das plataformas de hospedagem |
 | `scripts/package-hostinger.mjs` | Geração do ZIP estático com `.htaccess` para a Hostinger |
 
-O WhatsApp oficial é **558192017793**, confirmado no briefing e no site atual. Os CTAs de acompanhamento e imersão têm mensagens específicas. Os links abrem a conversa; nenhuma mensagem é enviada automaticamente.
+Os oito links de WhatsApp da página e o botão do modal usam o [grupo informado pelo cliente](https://chat.whatsapp.com/LmII1YduewFGVAvKpfpuU3?s=cl&p=a&iam=2), centralizado em `site.whatsappGroupUrl`. Os links preservam os parâmetros do convite e abrem em nova aba. Acionar o botão do modal também fecha o vídeo e interrompe a reprodução.
 
 ## Imagens e fontes
 
-As fotos exibidas foram selecionadas entre os arquivos enviados pelo cliente em `public/images`. O hero usa o retrato sorrindo com camisa marrom (`WhatsApp Image 2026-11-02 at 17.28.07 (2).jpeg`) e a apresentação usa o retrato sentado com terno cinza e a mão no queixo (`WhatsApp Image 2026-11-02 at 17.28.09 (2).jpeg`). Ambas mantêm as cores originais, sem filtros de preto e branco ou sépia. Os JPEGs originais estão preservados; a página carrega versões WebP locais de aproximadamente 63 KB e 69 KB. A imagem social local também foi atualizada com a foto do hero.
+As fotos foram selecionadas entre os arquivos enviados pelo cliente em `public/images`. A apresentação do mentor usa o retrato sentado com terno cinza e a mão no queixo (`WhatsApp Image 2026-11-02 at 17.28.09 (2).jpeg`), em WebP local. O hero usa novamente a foto sorrindo com camisa marrom, também preservada na imagem social. As três imagens dos feedbacks (`anitlacorretora`, `augustosimoes` e `janamartinez`) possuem versões WebP de 160 × 160 pixels para os avatares, com os PNGs originais preservados.
+
+Os vídeos originais estão em `public/videios/`: `rodrigo portugal2.mp4` no modal após a introdução e `PORTUGAL_V04_lisboa-e-madri_125.mp4` na seção de identificação. Ambos mantêm a proporção 9:16 e `preload="none"`. O modal aguarda o clique em “Assistir com som” para reproduzir o vídeo com áudio, sem controles nativos. O botão de play reaparece ao pausar ou terminar; X e Escape fecham o modal e interrompem a reprodução. O vídeo da seção mantém controles nativos, iniciando por interação. As capas WebP foram extraídas dos próprios vídeos. O servidor de preview entrega `video/mp4` e aceita intervalos de bytes. A borda do modal respeita `prefers-reduced-motion`.
 
 Os retratos do [site de referência do Rodrigo Vieira](https://gestconadmimoveis-cyber.github.io/mentoria-rodrigo-vieira/), utilizados na primeira versão conforme o briefing, também estão preservados.
 
 Barlow Condensed e Manrope são servidas localmente em WOFF2. A Manrope variável oferece pesos reais de 400 a 800 e sustenta a leitura dos textos, títulos editoriais e controles. A Barlow Condensed mantém a identidade da marca e dos destaques condensados. Tamanhos fluidos, entrelinha e largura dos blocos organizam a hierarquia em cada viewport. Não há chamadas ao Google Fonts durante a navegação. As licenças SIL Open Font License estão incluídas em `public/fonts/`.
 
-Não foram fornecidas fotografias aprovadas da operação Gestcon nem depoimentos. A imersão usa composição tipográfica e a seção de prova social permanece oculta. Para incluí-la, adicione somente relatos reais autorizados em `testimonials`.
+A seção de feedbacks usa textos fictícios solicitados para ilustrar o layout, com aviso visível na seção e em cada card. Eles não representam falas reais das pessoas retratadas. Os textos estão em `testimonials` e os avisos em `copy.proof`. Ao substituir por relatos reais, use conteúdo autorizado e atualize a identificação conforme a origem dos depoimentos.
 
 ## Movimento e componentes do 21st.dev
 
@@ -93,7 +97,7 @@ O cabeçalho mantém a identidade, os diferenciais e o menu compacto, sem botão
 
 ## Abertura com Rodrigo Vieira
 
-O efeito `vapour-text-effect.tsx` foi integrado a partir do código enviado pelo cliente. A amostragem dos pixels do texto e a onda de partículas foram adaptadas para executar uma única vez com o nome **Rodrigo Vieira**, antes da página. A entrada normalmente dura cerca de três segundos, oferece “Entrar no site” e pode ser fechada com Escape. Movimento reduzido e links diretos para seções pulam a introdução. Sem JavaScript, a página continua acessível.
+O efeito `vapour-text-effect.tsx` foi integrado a partir do código enviado pelo cliente. A amostragem dos pixels do texto e a onda de partículas foram adaptadas para executar uma única vez com o nome **Rodrigo Vieira**. A entrada normalmente dura cerca de três segundos, oferece “Entrar no site” e pode ser pulada com Escape. `SiteEntry` coordena a sequência animação → modal de vídeo → página. Com movimento reduzido, a animação é pulada e o modal aparece diretamente. Links diretos para seções pulam ambas as etapas. Fechar o modal restaura a rolagem e leva o foco ao CTA do hero; só então os títulos da página são animados. Sem JavaScript, a página continua acessível sem sobreposições.
 
 O componente está no caminho já adotado pelo projeto, `src/components/ui/`, acessível pelo alias `@/components/ui`. A implementação usa React, TypeScript e CSS local; não requer instalar Tailwind ou inicializar shadcn para executar esse efeito Canvas. O DPR é limitado e os frames, observers e listeners são encerrados ao concluir ou desmontar a animação.
 
@@ -116,14 +120,18 @@ O QA cobre:
 - Seis cards do programa por mouse e teclado, com os nove assuntos originais preservados.
 - Seis accordions do FAQ por mouse e teclado.
 - Menu mobile, fechamento com Escape, restauração de foco e navegação.
-- Todos os destinos internos e oito links de WhatsApp com mensagens codificadas.
+- Todos os destinos internos, os oito links da página e o botão do modal com o convite exato do grupo do WhatsApp.
+- Modal após a introdução, espera pelo play, reprodução com som e áudio decodificado, X e Escape, foco contido, pausa ao fechar e CTA abaixo do vídeo.
+- Hero original com retrato, proposta em duas colunas no desktop e empilhada no celular, com os textos preservados.
+- Vídeo PORTUGAL_V04 abaixo do título de identificação, reprodução, busca e entrega parcial dos arquivos.
+- Três cards de feedback com fotos e identificação explícita como exemplos fictícios.
 - Quatro seções independentes visíveis nas nove larguras e acessíveis pelos links do hero, menu e rodapé.
 - Carregamento das imagens e conteúdo principal disponível sem JavaScript.
 - Auditoria axe de critérios WCAG A/AA em 390 e 1440 pixels, com relatório das violações automatizadas detectadas.
 - Respeito a movimento reduzido e revelações durante a rolagem normal.
 - Entrada com o nome Rodrigo Vieira, conclusão automática, encerramento com Escape e pelo botão de entrada, liberação da rolagem e mudança da preferência de movimento durante a animação.
 
-Relatórios e capturas são gravados em `artifacts/`, ignorado pelo Git. A auditoria automatizada não substitui uma avaliação completa com tecnologias assistivas. A validação dos links confere destinos e mensagens; não envia conversas ao atendimento.
+Relatórios e capturas são gravados em `artifacts/`, ignorado pelo Git. A auditoria automatizada não substitui uma avaliação completa com tecnologias assistivas. A validação dos links confere o convite do grupo; não participa do grupo nem envia mensagens.
 
 ## Escopo de integrações
 

@@ -70,7 +70,7 @@ export function Header() {
               {link.label}
             </a>
           ))}
-          <CTA className="nav-mobile-cta">Quero participar</CTA>
+          <CTA className="nav-mobile-cta">Entrar no grupo</CTA>
         </nav>
         <button
           ref={toggle}

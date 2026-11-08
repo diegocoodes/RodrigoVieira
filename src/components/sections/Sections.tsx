@@ -8,6 +8,8 @@ import { Spotlight } from "@/components/ui/21st/Spotlight";
 import { copy } from "@/content/copy";
 import { photos } from "@/content/photos";
 import { whatsappLink } from "@/config/site";
+import { videos } from "@/content/videos";
+import { VideoPlayer } from "@/components/ui/VideoPlayer";
 import {
   audienceCards,
   experienceAxes,
@@ -31,6 +33,9 @@ export function AudienceCards() {
           <br />
           <AnimatedWords text={text.heading[1]} gold />
         </h2>
+        <div className="audience-video">
+          <VideoPlayer {...videos.audience} />
+        </div>
         <div className="audience-cards reveal-group">
           {audienceCards.map((card) => (
             <article className="audience-card reveal" key={card.title}>
@@ -58,7 +63,7 @@ export function MentorshipIntro() {
       aria-labelledby="intro-title"
     >
       <div className="container intro-layout reveal">
-        <div>
+        <div className="intro-heading">
           <Eyebrow>{text.eyebrow}</Eyebrow>
           <SectionTitle id="intro-title" lines={text.title} />
         </div>
@@ -122,7 +127,7 @@ function MentorshipExperience() {
           </li>
         ))}
       </ul>
-      <CTA context="experience">{text.cta}</CTA>
+      <CTA>{text.cta}</CTA>
     </section>
   );
 }
@@ -152,7 +157,7 @@ function GestconImmersion() {
           </article>
         ))}
       </div>
-      <CTA context="immersion">{text.cta}</CTA>
+      <CTA>{text.cta}</CTA>
     </section>
   );
 }
@@ -225,19 +230,52 @@ export function TargetAudience() {
 
 export function SocialProof() {
   if (!testimonials.length) return null;
+  const text = copy.proof;
   return (
-    <section className="section" aria-labelledby="testimonials-title">
+    <section
+      className="section feedback-section"
+      id="feedbacks"
+      aria-labelledby="testimonials-title"
+      aria-describedby="testimonials-note"
+    >
       <div className="container">
-        <Eyebrow>{copy.proof.eyebrow}</Eyebrow>
-        <h2 id="testimonials-title">{copy.proof.title}</h2>
-        <div className="testimonials">
-          {testimonials.map((item) => (
-            <blockquote key={item.name}>
-              <p>{item.quote}</p>
-              <cite>
-                {item.name} · {item.role}
-              </cite>
-            </blockquote>
+        <div className="feedback-heading reveal">
+          <Eyebrow>{text.eyebrow}</Eyebrow>
+          <h2 id="testimonials-title">
+            <AnimatedWords text={text.title[0]} />
+            <br />
+            <AnimatedWords text={text.title[1]} gold />
+          </h2>
+          <p id="testimonials-note" className="feedback-note">
+            {text.note}
+          </p>
+        </div>
+        <div className="feedback-grid reveal-group">
+          {testimonials.map((item, index) => (
+            <figure className="feedback-card reveal" key={item.name}>
+              <div className="feedback-card-top">
+                <span className="feedback-topic">{item.topic}</span>
+                <span className="feedback-index" aria-hidden="true">
+                  0{index + 1}
+                </span>
+              </div>
+              <blockquote>
+                <p>“{item.quote}”</p>
+              </blockquote>
+              <figcaption className="feedback-person">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={64}
+                  height={64}
+                  sizes="64px"
+                />
+                <div>
+                  <span className="feedback-name">{item.name}</span>
+                  <span className="feedback-label">{text.label}</span>
+                </div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

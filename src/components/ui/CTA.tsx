@@ -3,17 +3,15 @@ import { Icon } from "./Icon";
 
 export function CTA({
   children,
-  context = "main",
   className = "",
 }: {
   children: React.ReactNode;
-  context?: "main" | "immersion" | "experience";
   className?: string;
 }) {
   return (
     <a
       className={`button button-gold ${className}`}
-      href={whatsappLink(context)}
+      href={whatsappLink()}
       target="_blank"
       rel="noopener noreferrer"
     >

@@ -6,7 +6,7 @@ export const copy = {
     lead: "Pare de depender apenas da próxima comissão.",
     description:
       "Aprenda a estruturar uma carteira de locação com processos, gestão e receita recorrente.",
-    cta: "Quero entrar na mentoria",
+    cta: "Entrar no grupo da mentoria",
     secondary: "Conhecer o programa",
     note: "Acompanhamento próximo. Aplicação no seu negócio.",
     name: "Rodrigo Vieira",
@@ -75,7 +75,7 @@ export const copy = {
     ],
     description:
       "A proposta não é entregar teoria solta. É acompanhar a estruturação de uma operação com mais clareza, organização e visão de crescimento.",
-    cta: "Falar com a equipe",
+    cta: "Entrar no grupo no WhatsApp",
     duration: "6",
     unit: "MESES",
     caption: [
@@ -127,8 +127,10 @@ export const copy = {
     title: ["Para quem quer fazer", "da locação um", "negócio de verdade."],
   },
   proof: {
-    eyebrow: "Quem vive a experiência",
-    title: "HISTÓRIAS DA MENTORIA.",
+    eyebrow: "Feedbacks · Depoimentos ilustrativos",
+    title: ["Um novo olhar para", "a gestão de locação."],
+    note: "Textos fictícios para ilustrar esta seção. Não representam depoimentos reais das pessoas retratadas.",
+    label: "Exemplo fictício",
   },
   faq: {
     heading: ["Ainda tem", "alguma dúvida?"],
@@ -136,7 +138,7 @@ export const copy = {
     title: ["AINDA TEM", "ALGUMA DÚVIDA?"],
     description:
       "Uma conversa pode ajudar a entender se a mentoria faz sentido para o seu momento.",
-    cta: "Conversar pelo WhatsApp",
+    cta: "Entrar no grupo do WhatsApp",
   },
   final: {
     eyebrow: "O próximo passo começa aqui",
@@ -148,7 +150,7 @@ export const copy = {
     description:
       "Conheça a Mentoria Do Zero a 50 Administrações e saiba como desenvolver uma operação de locação com processos, gestão e visão de crescimento.",
     wordmark: ["DO ZERO A", "50.", "ADMINISTRAÇÕES"],
-    cta: "Quero participar da mentoria",
+    cta: "Quero entrar no grupo",
     note: "Fale com a equipe para conhecer o programa, os valores e as condições.",
   },
   footer: {

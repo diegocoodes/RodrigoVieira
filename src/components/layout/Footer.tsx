@@ -20,7 +20,7 @@ export function Footer() {
             </a>
           ))}
           <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-            WhatsApp ↗
+            Grupo no WhatsApp ↗
           </a>
         </nav>
         <p className="footer-note">{copy.footer.note}</p>

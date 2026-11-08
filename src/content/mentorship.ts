@@ -167,10 +167,38 @@ export const faqs = [
   {
     question: "Como faço para conhecer os valores?",
     answer:
-      "Entre em contato pelo WhatsApp para receber informações sobre investimento e condições de participação.",
+      "Entre no grupo da mentoria no WhatsApp para receber informações sobre investimento e condições de participação.",
   },
 ];
 
-// Somente materiais reais aprovados devem ser adicionados aqui.
-export type Testimonial = { name: string; role: string; quote: string };
-export const testimonials: Testimonial[] = [];
+// Exemplos fictícios solicitados para o layout. A seção identifica esse caráter
+// em cada card; os textos não representam falas reais das pessoas retratadas.
+export type Testimonial = {
+  name: string;
+  image: string;
+  topic: string;
+  quote: string;
+};
+export const testimonials: Testimonial[] = [
+  {
+    name: "Anitla",
+    image: "/images/anitlacorretora.webp",
+    topic: "Captação com método",
+    quote:
+      "Eu queria ir além das vendas pontuais e construir uma carteira de locação. O olhar do Rodrigo para captação e relacionamento com proprietários me ajudou a enxergar por onde começar, com mais direção e uma rotina comercial organizada.",
+  },
+  {
+    name: "Augusto Simões",
+    image: "/images/augustosimoes.webp",
+    topic: "Processos e gestão",
+    quote:
+      "O que mais fez sentido para mim foi conectar estratégia à rotina da imobiliária. Entender como organizar contratos, atendimento e responsabilidades da equipe trouxe clareza para pensar em uma operação que não dependa de improviso.",
+  },
+  {
+    name: "Jana Martinez",
+    image: "/images/janamartinez.webp",
+    topic: "Visão de crescimento",
+    quote:
+      "Passei a olhar para a administração de imóveis como um negócio de recorrência. Os temas de planejamento, sistemas e acompanhamento de processos me ajudaram a organizar prioridades e pensar no crescimento da carteira com mais estrutura.",
+  },
+];

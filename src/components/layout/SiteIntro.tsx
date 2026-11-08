@@ -11,26 +11,37 @@ const INTRO_ANIMATION = {
   vaporizeDuration: 1.25,
 };
 
-export function SiteIntro() {
+export function SiteIntro({
+  onComplete,
+}: {
+  onComplete: (showVideo: boolean) => void;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
   const priorOverflow = useRef<string | null>(null);
+  const finished = useRef(false);
   const [playing, setPlaying] = useState(false);
-  const finish = useCallback(() => {
+  const finish = useCallback((showVideo = true) => {
+    if (finished.current) return;
+    finished.current = true;
     dialog.current?.close();
     setPlaying(false);
     if (priorOverflow.current !== null) {
       document.documentElement.style.overflow = priorOverflow.current;
       priorOverflow.current = null;
     }
-  }, []);
+    onComplete(showVideo);
+  }, [onComplete]);
   useEffect(() => {
+    finished.current = false;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (
-      preference.matches ||
-      window.location.hash ||
-      !dialog.current?.showModal
-    )
+    if (window.location.hash || !dialog.current?.showModal) {
+      finish(false);
       return;
+    }
+    if (preference.matches) {
+      finish();
+      return;
+    }
     dialog.current.showModal();
     setPlaying(true);
     priorOverflow.current = document.documentElement.style.overflow;
@@ -55,8 +66,10 @@ export function SiteIntro() {
       ref={dialog}
       className="site-intro"
       aria-label="Apresentação Rodrigo Vieira"
-      onCancel={finish}
-      onClose={finish}
+      onCancel={(event) => {
+        event.preventDefault();
+        finish();
+      }}
     >
       <div className="site-intro-content">
         <p className="intro-kicker">MENTORIA EM GESTÃO DE LOCAÇÃO</p>
@@ -77,7 +90,7 @@ export function SiteIntro() {
         )}
         <span className="intro-rule" aria-hidden="true" />
       </div>
-      <button className="intro-skip" type="button" onClick={finish}>
+      <button className="intro-skip" type="button" onClick={() => finish()}>
         Entrar no site <span aria-hidden="true">↗</span>
       </button>
     </dialog>

@@ -7,6 +7,7 @@ import "@/styles/premium.css";
 import "@/styles/entry-and-program.css";
 import "@/styles/flow-layout.css";
 import "@/styles/vivid-motion.css";
+import "@/styles/media-and-feedback.css";
 
 const manrope = localFont({
   src: "../../public/fonts/manrope-variable-latin.woff2",
