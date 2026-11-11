@@ -34,6 +34,32 @@ Não selecione `out` como Root Directory: ela é a saída gerada durante o build
 
 O preset **Other** é intencional e está definido por `"framework": null` em `vercel.json`. O código continua usando Next.js para gerar o site, mas a Vercel publica os arquivos estáticos de `out/`. Combinar o preset Next.js com essa saída pode provocar `NEXT_NO_ROUTES_MANIFEST`, pois o adaptador passa a procurar o manifesto interno dentro de `out/`. A configuração versionada tem prioridade sobre o preset do painel; ao configurar manualmente, use Other.
 
+## Hostinger: publicação automática pelo GitHub
+
+Para a integração com `diegocoodes/RodrigoVieira`, use a branch `main` e configure o aplicativo como **front-end estático** no hPanel:
+
+| Campo | Valor |
+| --- | --- |
+| Framework / tipo | Other / front-end estático |
+| Diretório raiz | `.` |
+| Node.js | 24.x |
+| Gerenciador de pacotes | npm |
+| Comando de instalação, se disponível | `npm ci` |
+| Comando de build | `npm run build` |
+| Diretório de saída | `out` |
+| Arquivo de entrada | Deixar vazio |
+| Variável de ambiente | `NEXT_PUBLIC_SITE_URL=https://formuladalocacaorecorrente.com.br` |
+
+Salve essas configurações e execute **Redeploy** com o commit mais recente da `main`. Os próximos pushes serão publicados pela integração GitHub da Hostinger.
+
+O preset de servidor Next.js com saída `.next` não corresponde a este projeto: `output: "export"` gera o site pronto em `out/`. Se o painel atual não permitir publicar como front-end estático, crie um aplicativo front-end com a integração GitHub acima ou use o ZIP para hospedagem PHP/HTML descrito a seguir.
+
+### Compatibilidade do compilador
+
+O build usa `next build --webpack` para permitir o fallback WebAssembly do SWC em ambientes sem a GLIBC exigida pelo compilador nativo. A configuração fica em `next.config.mjs`, carregada diretamente pelo Node.js, sem transpilar um `next.config.ts`.
+
+Isso trata a sequência de erros `GLIBC_2.29 not found`, `Failed to load next.config.ts` e `ERR_MODULE_NOT_FOUND` durante a leitura da configuração. O aviso sobre o binário nativo pode continuar aparecendo no servidor; confirme que o fallback WASM conclui o build. Não desative o fallback com `NEXT_DISABLE_SWC_WASM`.
+
 ## Hostinger: ZIP para hospedagem PHP/HTML
 
 No computador, gere o pacote:
@@ -75,3 +101,7 @@ Abra `http://127.0.0.1:3000`. Para gerar novamente o ZIP do build existente, use
 - [Vercel: configuração de build](https://vercel.com/docs/builds/configure-a-build)
 - [Vercel: versões do Node.js](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions)
 - [Hostinger: upload de arquivos e extração em public_html](https://www.hostinger.com/support/1869114-how-to-upload-backups-with-file-manager-in-hostinger/)
+- [Hostinger: publicação de aplicativos pelo GitHub](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/)
+- [Hostinger: compatibilidade do Next.js 16 e GLIBC](https://www.hostinger.com/support/how-to-fix-next-js-16-turbopack-build-errors-on-hostinger/)
+- [Next.js: opções do build com Webpack](https://nextjs.org/docs/app/api-reference/cli/next#next-build-options)
+- [Next.js: configuração JavaScript com módulos ESM](https://nextjs.org/docs/app/api-reference/config/next-config-js#ecmascript-modules)

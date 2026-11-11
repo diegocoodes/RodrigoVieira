@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
-
-const config: NextConfig = {
+// JavaScript lets Node load this config without the native SWC compiler.
+/** @type {import('next').NextConfig} */
+const config = {
   output: "export",
   trailingSlash: true,
   images: { unoptimized: true },

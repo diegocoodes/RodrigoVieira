@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
-    "build": "next build",
+    "build": "next build --webpack",
     "build:hostinger": "npm run build && node scripts/package-hostinger.mjs",
     "package:hostinger": "node scripts/package-hostinger.mjs",
     "typecheck": "tsc --noEmit",
