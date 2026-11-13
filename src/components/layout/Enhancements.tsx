@@ -58,7 +58,7 @@ export function Enhancements() {
       start();
     }
 
-    // Reveal the hero after both the name animation and the video have closed.
+    // Reveal the hero after the welcome video has closed.
     const frame = requestAnimationFrame(start);
     const entryObserver = new MutationObserver(start);
     if (entry) {

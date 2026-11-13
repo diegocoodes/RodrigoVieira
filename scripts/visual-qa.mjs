@@ -6,6 +6,7 @@ await mkdir('artifacts', { recursive: true });
 const browser = await chromium.launch({ channel: process.env.QA_BROWSER || 'msedge' });
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  await context.route('https://connect.facebook.net/**', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
   const page = await context.newPage();
   page.setDefaultTimeout(15000);
   await page.addInitScript(() => {
@@ -19,7 +20,7 @@ try {
     }).observe({ type: 'largest-contentful-paint', buffered: true });
   });
   await page.goto(process.env.QA_URL || 'http://127.0.0.1:3000', { waitUntil: 'domcontentloaded' });
-  await page.locator('.site-intro').waitFor({ state: 'hidden' });
+  assert.equal(await page.locator('.site-intro, .vapour-text').count(), 0, 'Sem animação de entrada');
   const welcome = page.locator('.welcome-video-modal');
   await welcome.waitFor({ state: 'visible' });
   await page.screenshot({ path: 'artifacts/welcome-video-desktop.png' });

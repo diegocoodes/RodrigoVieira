@@ -14,8 +14,9 @@ await mkdir('artifacts', { recursive: true });
 async function dismissWelcome(page) {
   await page.waitForFunction(() => {
     const entry = document.querySelector('[data-site-entry]');
-    return entry && entry.dataset.entryStage !== 'intro';
+    return entry && ['video', 'done'].includes(entry.dataset.entryStage);
   });
+  assert.equal(await page.locator('.site-intro, .vapour-text').count(), 0, 'Sem animação de entrada');
   const modal = page.locator('.welcome-video-modal');
   if (await modal.count()) {
     await modal.waitFor({ state: 'visible' });
@@ -37,6 +38,8 @@ async function dismissWelcome(page) {
 }
 try {
   const context = await browser.newContext({ reducedMotion: 'reduce' });
+  // Keep the real bootstrap and inspect its queue without sending test visits to Meta.
+  await context.route('https://connect.facebook.net/**', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
   context.setDefaultTimeout(15000);
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
@@ -45,6 +48,10 @@ try {
     await page.setViewportSize({ width, height: 950 });
     await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
     await dismissWelcome(page);
+    await page.waitForFunction(() => typeof window.fbq === 'function');
+    assert.deepEqual(await page.evaluate(() => window.fbq.queue.map(args => Array.from(args))), [
+      ['init', '1615223779888343'], ['track', 'PageView'],
+    ], 'Pixel inicializa uma vez e registra um PageView por carregamento');
     console.log(`Conferindo layout em ${width}px`);
     await page.evaluate(() => document.fonts.ready);
     assert.equal(await page.locator('main').evaluate(el => getComputedStyle(el, '::before').content), 'none', 'Sem moldura vertical no corpo');
@@ -172,7 +179,13 @@ try {
     results.push({ accessibility: width, violations: 0 });
   }
   const noJS = await browser.newPage({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  const fallbackRequests = [];
+  await noJS.route('https://www.facebook.com/tr**', route => {
+    fallbackRequests.push(route.request().url());
+    return route.fulfill({ status: 204 });
+  });
   await noJS.goto(baseURL);
+  assert.deepEqual(fallbackRequests, ['https://www.facebook.com/tr?id=1615223779888343&ev=PageView&noscript=1']);
   assert.equal(await noJS.locator('.site-intro').isVisible(), false);
   assert.equal(await noJS.locator('.welcome-video-modal').count(), 0, 'Sem modal bloqueando a página sem JavaScript');
   for (const video of await noJS.locator('video').all()) {
@@ -183,8 +196,10 @@ try {
   for (const topic of topics) assert.equal(await noJS.locator('#programa').getByRole('heading', { name: topic, exact: true }).isVisible(), true);
   await noJS.close();
   results.push({ noJavaScript: 'página acessível e nove assuntos disponíveis' });
+  results.push({ metaPixel: '1615223779888343; um PageView por carregamento; fallback sem JavaScript aprovado; visitas de teste interceptadas' });
 
   const motionContext = await browser.newContext({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 950 } });
+  await motionContext.route('https://connect.facebook.net/**', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
   motionContext.setDefaultTimeout(15000);
   const motionPage = await motionContext.newPage();
   const motionErrors = [];
@@ -192,13 +207,7 @@ try {
   motionPage.on('console', message => { if (message.type() === 'error') motionErrors.push(message.text()); });
   await motionPage.goto(baseURL, { waitUntil: 'domcontentloaded' });
   const intro = motionPage.locator('.site-intro');
-  await intro.waitFor({ state: 'visible' });
-  assert.equal(await intro.getByText('Rodrigo Vieira', { exact: true }).count(), 1);
-  assert.equal(await motionPage.locator('#hero-title [data-text-state="visible"]').count(), 0, 'Títulos aguardam a introdução');
-  await motionPage.locator('.vapour-text[data-canvas-ready="true"]').waitFor();
-  assert.equal(await motionPage.evaluate(() => document.documentElement.style.overflow), 'hidden');
-  await intro.waitFor({ state: 'hidden', timeout: 5000 });
-  assert.equal(await intro.locator('canvas').count(), 0);
+  assert.equal(await intro.count(), 0, 'Abertura em partículas removida');
   const welcome = motionPage.locator('.welcome-video-modal');
   await welcome.waitFor({ state: 'visible' });
   assert.equal(await motionPage.evaluate(() => document.documentElement.style.overflow), 'hidden');
@@ -237,7 +246,7 @@ try {
   assert.equal(await welcomeMedia.evaluate(el => el.paused), true, 'Fechar interrompe a reprodução');
   assert.notEqual(await motionPage.evaluate(() => document.documentElement.style.overflow), 'hidden');
   assert.equal(await motionPage.locator('.hero-actions .button').evaluate(el => el === document.activeElement), true, 'Foco volta à mentoria');
-  results.push({ entry: 'Animação → modal aguarda play → vídeo com som → hero com foto; áudio decodificado, Escape, pausa, foco e acessibilidade aprovados' });
+  results.push({ entry: 'Modal direto, sem animação de entrada → vídeo com som → hero com foto; áudio decodificado, Escape, pausa, foco e acessibilidade aprovados' });
   await motionPage.waitForFunction(() => [...document.querySelectorAll('#hero-title [data-text-reveal]')].every(el => el.dataset.textState === 'visible'));
   await motionPage.waitForFunction(() => [...document.querySelectorAll('#hero-title .animated-word')].every(el => getComputedStyle(el).opacity === '1'));
   const tickerMotion = await motionPage.locator('.ticker-inner').evaluate(el => {
@@ -258,14 +267,11 @@ try {
   await motionPage.waitForFunction(() => [...document.querySelectorAll('#program-title .animated-word')].every(el => getComputedStyle(el).opacity === '1'));
   results.push({ motion: '12 temas na faixa para a direita, títulos após a entrada e no scroll, degradê animado' });
   await motionPage.reload({ waitUntil: 'domcontentloaded' });
-  await intro.waitFor({ state: 'visible' });
+  await welcome.waitFor({ state: 'visible' });
   await motionPage.keyboard.press('Escape');
-  await intro.waitFor({ state: 'hidden' });
-  await dismissWelcome(motionPage);
+  await welcome.waitFor({ state: 'detached' });
+  assert.equal(await motionPage.locator('[data-site-entry]').getAttribute('data-entry-stage'), 'done');
   await motionPage.reload({ waitUntil: 'domcontentloaded' });
-  await intro.waitFor({ state: 'visible' });
-  await intro.getByRole('button', { name: 'Entrar no site' }).click();
-  await intro.waitFor({ state: 'hidden' });
   await welcome.waitFor({ state: 'visible' });
   const join = welcome.getByRole('link', { name: 'Entrar na mentoria', exact: true });
   assert.equal(await join.getAttribute('href'), whatsappGroupURL);
@@ -273,10 +279,9 @@ try {
   await join.click();
   await welcome.waitFor({ state: 'detached' });
   await motionPage.reload({ waitUntil: 'domcontentloaded' });
-  await intro.waitFor({ state: 'visible' });
+  await welcome.waitFor({ state: 'visible' });
   await motionPage.emulateMedia({ reducedMotion: 'reduce' });
-  await intro.waitFor({ state: 'hidden' });
-  assert.equal(await intro.locator('canvas').count(), 0);
+  assert.equal(await intro.count(), 0);
   await welcome.waitFor({ state: 'visible' });
   assert.equal(await welcome.locator('.video-frame-animated').evaluate(el => getComputedStyle(el, '::before').animationName), 'none', 'Borda estática com movimento reduzido');
   await dismissWelcome(motionPage);
@@ -288,6 +293,7 @@ try {
   assert.deepEqual(motionErrors, []);
   await motionContext.close();
   const deepLink = await browser.newPage({ reducedMotion: 'no-preference' });
+  await deepLink.route('https://connect.facebook.net/**', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
   await deepLink.goto(`${baseURL}/#programa`);
   await deepLink.waitForFunction(() => document.querySelector('[data-site-entry]')?.dataset.entryStage === 'done');
   assert.equal(await deepLink.locator('.site-intro[open], .welcome-video-modal').count(), 0, 'Links diretos preservam a navegação para a seção');

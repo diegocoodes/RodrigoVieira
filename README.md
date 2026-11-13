@@ -2,7 +2,7 @@
 
 Landing page completa para **Do Zero a 50 Administrações**, com identidade em preto e dourado, fotos oficiais do mentor e conversão pelo WhatsApp.
 
-A abertura mantém o retrato de Rodrigo acima do texto, como no hero original. Após a animação de entrada, o vídeo de Rodrigo em Portugal aparece em um modal com borda dourada animada, sem controles de vídeo, com X para fechar e o botão “Entrar na mentoria” abaixo. O segundo vídeo permanece logo abaixo de “Essa mentoria foi feita para você que”. A seção “Antes de crescer, estruture.” apresenta o título à esquerda e os dois parágrafos à direita, em um painel separado; no celular, os blocos ficam empilhados. A apresentação do mentor, o programa, o acompanhamento, a imersão e os feedbacks preservam seus conteúdos.
+A abertura mantém o retrato de Rodrigo acima do texto, como no hero original. Ao abrir o site, o vídeo de Rodrigo em Portugal aparece diretamente em um modal com borda dourada animada, sem controles de vídeo, com X para fechar e o botão “Entrar na mentoria” abaixo. A animação de entrada em partículas foi removida. O segundo vídeo permanece logo abaixo de “Essa mentoria foi feita para você que”. A seção “Antes de crescer, estruture.” apresenta o título à esquerda e os dois parágrafos à direita, em um painel separado; no celular, os blocos ficam empilhados. A apresentação do mentor, o programa, o acompanhamento, a imersão e os feedbacks preservam seus conteúdos.
 
 ## Executar
 
@@ -15,7 +15,7 @@ npm ci
 npm run dev
 ```
 
-Abra **http://127.0.0.1:3000**. O desenvolvimento usa Next.js com App Router, React, TypeScript e CSS com variáveis globais. A abertura utiliza Canvas 2D e os efeitos de iluminação usam CSS e SVG. A dependência `motion` permanece disponível para o componente reutilizável de abas preservado em `src/components/ui/21st/`. Não há UI kit global.
+Abra **http://127.0.0.1:3000**. O desenvolvimento usa Next.js com App Router, React, TypeScript e CSS com variáveis globais. Os efeitos de iluminação usam CSS e SVG. A dependência `motion` permanece disponível para o componente reutilizável de abas preservado em `src/components/ui/21st/`. Não há UI kit global.
 
 ## Build e publicação
 
@@ -48,7 +48,7 @@ Antes da publicação definitiva, copie `.env.example` para `.env.local`, preenc
 | `src/config/site.ts` | Grupo do WhatsApp, navegação e metadados |
 | `src/styles/globals.css` | Tokens, composição, responsividade e movimento reduzido |
 | `src/styles/motion.css` | Fundos animados, entradas, faixa contínua, interações e movimento reduzido |
-| `src/styles/entry-and-program.css` | Abertura com vaporização e grade dos seis cards do programa |
+| `src/styles/entry-and-program.css` | Grade dos seis cards do programa |
 | `src/styles/flow-layout.css` | Composição contínua, hero centralizado e seções adaptadas à última referência |
 | `src/styles/vivid-motion.css` | Base preta, luzes e partículas douradas, faixa para a direita e animações dos títulos |
 | `src/styles/media-and-feedback.css` | Modal de vídeo, proposta em duas colunas, borda animada e cards de feedback |
@@ -64,7 +64,7 @@ Os oito links de WhatsApp da página e o botão do modal usam o [grupo informado
 
 As fotos foram selecionadas entre os arquivos enviados pelo cliente em `public/images`. A apresentação do mentor usa o retrato sentado com terno cinza e a mão no queixo (`WhatsApp Image 2026-11-02 at 17.28.09 (2).jpeg`), em WebP local. O hero usa novamente a foto sorrindo com camisa marrom, também preservada na imagem social. As três imagens dos feedbacks (`anitlacorretora`, `augustosimoes` e `janamartinez`) possuem versões WebP de 160 × 160 pixels para os avatares, com os PNGs originais preservados.
 
-Os vídeos originais estão em `public/videios/`: `rodrigo portugal2.mp4` no modal após a introdução e `PORTUGAL_V04_lisboa-e-madri_125.mp4` na seção de identificação. Ambos mantêm a proporção 9:16 e `preload="none"`. O modal aguarda o clique em “Assistir com som” para reproduzir o vídeo com áudio, sem controles nativos. O botão de play reaparece ao pausar ou terminar; X e Escape fecham o modal e interrompem a reprodução. O vídeo da seção mantém controles nativos, iniciando por interação. As capas WebP foram extraídas dos próprios vídeos. O servidor de preview entrega `video/mp4` e aceita intervalos de bytes. A borda do modal respeita `prefers-reduced-motion`.
+Os vídeos originais estão em `public/videios/`: `rodrigo portugal2.mp4` no modal de boas-vindas e `PORTUGAL_V04_lisboa-e-madri_125.mp4` na seção de identificação. Ambos mantêm a proporção 9:16 e `preload="none"`. O modal aguarda o clique em “Assistir com som” para reproduzir o vídeo com áudio, sem controles nativos. O botão de play reaparece ao pausar ou terminar; X e Escape fecham o modal e interrompem a reprodução. O vídeo da seção mantém controles nativos, iniciando por interação. As capas WebP foram extraídas dos próprios vídeos. O servidor de preview entrega `video/mp4` e aceita intervalos de bytes. A borda do modal respeita `prefers-reduced-motion`.
 
 Os retratos do [site de referência do Rodrigo Vieira](https://gestconadmimoveis-cyber.github.io/mentoria-rodrigo-vieira/), utilizados na primeira versão conforme o briefing, também estão preservados.
 
@@ -92,15 +92,13 @@ Nesta atualização foram feitas **exatamente duas consultas de código incluíd
 
 A faixa apresenta 12 temas reais da mentoria e se desloca continuamente para a direita. A repetição usa dois grupos iguais, com o segundo oculto para leitores de tela. O fundo tem base preta sólida, luzes douradas localizadas nas bordas e pequenas partículas douradas, animadas por transformações e opacidade. Os cards usam cinza neutro, mantendo o dourado nos destaques e na iluminação, sem reconstruir as linhas removidas do layout. O Spotlight do 21st.dev também ilumina a seção de acompanhamento e imersão.
 
-Os títulos revelam palavras em sequência com entrada suave e desfoque, e os destaques recebem um degradê dourado. A implementação local `AnimatedWords.tsx` foi inspirada nos previews de Blur Out Up, Blur In Text e Text Reveal do catálogo 21st.dev. A consulta de uso confirmou que as duas recuperações gratuitas já estavam esgotadas: nenhum novo código pago foi recuperado e nenhuma assinatura foi iniciada. Os títulos do hero aguardam o encerramento da abertura; os demais animam uma vez ao entrar na tela. O texto continua legível sem JavaScript e com movimento reduzido, inclusive se a preferência mudar durante a navegação.
+Os títulos revelam palavras em sequência com entrada suave e desfoque, e os destaques recebem um degradê dourado. A implementação local `AnimatedWords.tsx` foi inspirada nos previews de Blur Out Up, Blur In Text e Text Reveal do catálogo 21st.dev. A consulta de uso confirmou que as duas recuperações gratuitas já estavam esgotadas: nenhum novo código pago foi recuperado e nenhuma assinatura foi iniciada. Os títulos do hero aguardam o fechamento do vídeo de boas-vindas; os demais animam uma vez ao entrar na tela. O texto continua legível sem JavaScript e com movimento reduzido, inclusive se a preferência mudar durante a navegação.
 
-O cabeçalho mantém a identidade, os diferenciais e o menu compacto, sem botão de pausa. `prefers-reduced-motion` desativa as animações não essenciais automaticamente. Os efeitos combinam CSS, SVG, IntersectionObserver e Canvas 2D. As quatro seções principais permanecem visíveis na rolagem.
+O cabeçalho mantém a identidade, os diferenciais e o menu compacto, sem botão de pausa. `prefers-reduced-motion` desativa as animações não essenciais automaticamente. Os efeitos combinam CSS, SVG e IntersectionObserver. As quatro seções principais permanecem visíveis na rolagem.
 
-## Abertura com Rodrigo Vieira
+## Entrada no site
 
-O efeito `vapour-text-effect.tsx` foi integrado a partir do código enviado pelo cliente. A amostragem dos pixels do texto e a onda de partículas foram adaptadas para executar uma única vez com o nome **Rodrigo Vieira**. A entrada normalmente dura cerca de três segundos, oferece “Entrar no site” e pode ser pulada com Escape. `SiteEntry` coordena a sequência animação → modal de vídeo → página. Com movimento reduzido, a animação é pulada e o modal aparece diretamente. Links diretos para seções pulam ambas as etapas. Fechar o modal restaura a rolagem e leva o foco ao CTA do hero; só então os títulos da página são animados. Sem JavaScript, a página continua acessível sem sobreposições.
-
-O componente está no caminho já adotado pelo projeto, `src/components/ui/`, acessível pelo alias `@/components/ui`. A implementação usa React, TypeScript e CSS local; não requer instalar Tailwind ou inicializar shadcn para executar esse efeito Canvas. O DPR é limitado e os frames, observers e listeners são encerrados ao concluir ou desmontar a animação.
+A animação com o nome Rodrigo Vieira e o efeito Canvas de partículas foram removidos. `SiteEntry` abre diretamente o modal de vídeo de boas-vindas, que aguarda o clique em “Assistir com som”. X, Escape e o CTA fecham o modal, interrompem a reprodução e liberam a rolagem. O foco volta ao CTA do hero. Links diretos para seções pulam o modal. Sem JavaScript, a página permanece acessível sem sobreposições.
 
 A pesquisa utilizou referências primárias de [animação de texto do Motion](https://motion.dev/docs/text-animation), [animações eficientes em CSS no web.dev](https://web.dev/articles/animations-guide), [tipografia responsiva no web.dev](https://web.dev/learn/design/typography), [accordions nativos na MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/::details-content) e [controle de movimento no W3C](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html). A implementação mantém a direção visual em preto e dourado e as cores originais das fotos.
 
@@ -122,7 +120,7 @@ O QA cobre:
 - Seis accordions do FAQ por mouse e teclado.
 - Menu mobile, fechamento com Escape, restauração de foco e navegação.
 - Todos os destinos internos, os oito links da página e o botão do modal com o convite exato do grupo do WhatsApp.
-- Modal após a introdução, espera pelo play, reprodução com som e áudio decodificado, X e Escape, foco contido, pausa ao fechar e CTA abaixo do vídeo.
+- Modal direto, sem animação de entrada, espera pelo play, reprodução com som e áudio decodificado, X e Escape, foco contido, pausa ao fechar e CTA abaixo do vídeo.
 - Hero original com retrato, proposta em duas colunas no desktop e empilhada no celular, com os textos preservados.
 - Vídeo PORTUGAL_V04 abaixo do título de identificação, reprodução, busca e entrega parcial dos arquivos.
 - Três cards de feedback com fotos e identificação explícita como exemplos fictícios.
@@ -130,10 +128,11 @@ O QA cobre:
 - Carregamento das imagens e conteúdo principal disponível sem JavaScript.
 - Auditoria axe de critérios WCAG A/AA em 390 e 1440 pixels, com relatório das violações automatizadas detectadas.
 - Respeito a movimento reduzido e revelações durante a rolagem normal.
-- Entrada com o nome Rodrigo Vieira, conclusão automática, encerramento com Escape e pelo botão de entrada, liberação da rolagem e mudança da preferência de movimento durante a animação.
+- Ausência da abertura em partículas, modal direto, liberação da rolagem e mudança da preferência de movimento.
+- Meta Pixel com uma inicialização e um evento `PageView` por carregamento, além da alternativa sem JavaScript. As chamadas à Meta são interceptadas durante o QA para não registrar visitas de teste.
 
 Relatórios e capturas são gravados em `artifacts/`, ignorado pelo Git. A auditoria automatizada não substitui uma avaliação completa com tecnologias assistivas. A validação dos links confere o convite do grupo; não participa do grupo nem envia mensagens.
 
 ## Escopo de integrações
 
-Não há formulário, rastreamento, pixel, promessa de resultado garantido ou contagem artificial de vagas. Analytics e imagens adicionais podem ser integrados quando houver dados e materiais aprovados.
+O Meta Pixel **1615223779888343** está instalado no layout global (`src/app/layout.tsx`) com `next/script` e estratégia `afterInteractive`. O código inicializa o Pixel e envia `PageView` uma vez por carregamento da página. A imagem de rastreamento em `noscript` atende navegadores sem JavaScript. Não há formulário, promessa de resultado garantido ou contagem artificial de vagas.
