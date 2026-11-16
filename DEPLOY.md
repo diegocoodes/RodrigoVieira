@@ -2,6 +2,28 @@
 
 O mesmo código atende às duas plataformas. O Next.js gera HTML, CSS, JavaScript, imagens e fontes em `out/`. O site não precisa de servidor Node.js depois do build.
 
+## Análise de compatibilidade estática
+
+O projeto usa Next.js 16.4.4 com App Router e já tem `output: "export"`, `trailingSlash: true` e `images.unoptimized: true` em `next.config.mjs`. Não é necessária uma conversão nem a remoção de funcionalidades.
+
+| Recurso verificado | Resultado |
+| --- | --- |
+| API própria / Route Handlers de aplicação | Ausentes; `robots.ts` e `sitemap.ts` geram arquivos estáticos no build |
+| SSR por requisição e ISR | Ausentes; os Server Components são executados apenas no build |
+| Banco de dados e autenticação no servidor | Ausentes |
+| Middleware, Proxy e Server Actions | Ausentes |
+| Formulários e envio de dados | Não há formulários no projeto |
+| WhatsApp | Oito links na página e um no modal; convite e parâmetros preservados |
+| Vídeos, imagens e fontes | Arquivos locais em `public/`, copiados para `out/`; os espaços no caminho do vídeo estão codificados |
+| Menu, modal, animações, programa e FAQ | Interações compatíveis com hospedagem estática |
+| Meta Pixel | Integração no navegador, preservada, sem backend próprio |
+
+A página principal é `/`; a navegação entre seções usa âncoras. Também são exportados `404.html`, `robots.txt`, `sitemap.xml` e `icon.svg`. Não há rotas dinâmicas que precisem de servidor nem redirecionamentos de Next.js a converter. Os botões do WhatsApp usam links diretos.
+
+A única variável do site é `NEXT_PUBLIC_SITE_URL`. Sem ela, o site funciona, mas o canonical não é emitido, o sitemap fica sem URLs e o compartilhamento usa a imagem remota já prevista no código. Para completar esses metadados, configure a origem do domínio existente antes do build, conforme as instruções abaixo. O domínio, os links e o conteúdo não precisam ser alterados.
+
+Publique **todo o conteúdo de `out/`**, incluindo `_next/`, `images/`, `videios/` e `fonts/`, na raiz do domínio existente. Não use `.next/` como pasta de publicação. O servidor de `npm run preview` é apenas uma ferramenta local de validação.
+
 ## Preparar o ambiente
 
 Use **Node.js 24.x**, npm e o arquivo `package-lock.json` versionado:
@@ -94,6 +116,18 @@ npm run preview
 ```
 
 Abra `http://127.0.0.1:3000`. Para gerar novamente o ZIP do build existente, use `npm run package:hostinger`.
+
+No Windows, se o PowerShell bloquear `npm.ps1`, use `npm.cmd install`, `npm.cmd run build` e `npm.cmd run preview`. Isso executa os mesmos comandos sem alterar a política de execução do sistema.
+
+### Resultado da validação em 16/11/2026
+
+- `npm install` concluído com Node.js 24.19.0, sem vulnerabilidades reportadas pelo npm.
+- `npm run build` concluído, incluindo a checagem TypeScript; todas as rotas foram classificadas como estáticas.
+- Os 35 arquivos de `public/` foram comparados com a exportação por SHA-256, sem diferenças.
+- `npm run qa` aprovado no Microsoft Edge, servindo apenas `out/` na porta local 4317: nove larguras de tela, âncoras, oito links de WhatsApp da página e o link do modal, menus, programa, FAQ, reprodução e busca dos dois vídeos, animações, modo sem JavaScript e Meta Pixel. As auditorias automatizadas de acessibilidade em 390 e 1440 pixels não detectaram violações. O relatório fica em `artifacts/qa-results.json`.
+- `npm run package:hostinger` gerou `dist/hostinger/rodrigo-vieira-hostinger.zip`; os 77 arquivos do ZIP foram conferidos com a exportação e o `.htaccess` de origem.
+
+Não foi encontrado impedimento técnico para hospedagem estática. O build validado não recebeu `NEXT_PUBLIC_SITE_URL`; permanece a pendência opcional dos metadados descrita acima. Nenhum arquivo-fonte foi removido e nenhum domínio foi alterado. As alterações versionadas desta preparação se limitam a este guia e aos comentários de `.env.example`; a configuração de exportação já estava correta.
 
 ## Referências oficiais
 
